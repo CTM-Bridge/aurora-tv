@@ -83,10 +83,17 @@ static void glue_hotplug_cb(void *ud, const ctm_controller_dev_t *dev, int prese
     pthread_mutex_unlock(&s_dev_mutex);
 }
 
-bool ctm_bridge_start(void)
+/* Core bring-up shared by ctm_bridge_start() and the panel entry points:
+ * stopSniff worker + agent discovery + enumerate + BT MAC publish. Without
+ * this, a controller plugged from the overlay panel alone (no "Use CTM
+ * Bridge" setting) attaches over usbip but falls into BT sniff mode --
+ * enumerates on the host yet feels dead. Idempotent. */
+static bool s_core_up = false;
+
+static void ctm_glue_ensure_core(void)
 {
-    if (s_active) {
-        return true;
+    if (s_core_up) {
+        return;
     }
     g_running = true;
 
@@ -100,9 +107,6 @@ bool ctm_bridge_start(void)
         }
     }
 
-    /* Locate the Windows agent, enumerate controllers, bridge the first one we
-     * recognise. Minimal: a single controller; multi-controller and hotplug
-     * (via ctm_monitor) are later refinements. */
     if (!discover_agent_once()) {
         log_append("ctm glue: no CTM agent found on the network");
     }
@@ -110,6 +114,15 @@ bool ctm_bridge_start(void)
     // Fill g_bt_macs so the stopSniff worker actually keeps the BT controllers
     // out of sniff mode (the worker reads this list every 500 ms).
     publish_bt_macs();
+    s_core_up = true;
+}
+
+bool ctm_bridge_start(void)
+{
+    if (s_active) {
+        return true;
+    }
+    ctm_glue_ensure_core();
 
     if (s_autoplug) {
         int count = ctm_bridge_plug_all();
@@ -134,6 +147,7 @@ int ctm_bridge_list(ctm_bridge_dev_t *out, int max)
     if (out == NULL || max <= 0) {
         return 0;
     }
+    ctm_glue_ensure_core();
     pthread_mutex_lock(&s_dev_mutex);
     ctm_glue_enumerate();
     int n = 0;
@@ -161,6 +175,7 @@ int ctm_bridge_list(ctm_bridge_dev_t *out, int max)
 
 bool ctm_bridge_plug_index(int index)
 {
+    ctm_glue_ensure_core();
     pthread_mutex_lock(&s_dev_mutex);
     bool ok = false;
     if (index >= 0 && index < g_devices.count) {
@@ -188,6 +203,7 @@ void ctm_bridge_unplug_index(int index)
 
 int ctm_bridge_plug_all(void)
 {
+    ctm_glue_ensure_core();
     pthread_mutex_lock(&s_dev_mutex);
     int count = glue_plug_all_locked();
     pthread_mutex_unlock(&s_dev_mutex);
@@ -255,7 +271,7 @@ void ctm_bridge_set_settings(int index, const ctm_bridge_settings_t *in)
 
 void ctm_bridge_stop(void)
 {
-    if (!s_active) {
+    if (!s_active && !s_core_up) {
         return;
     }
     /* Stop hotplug first: joins the monitor thread (do this WITHOUT holding
@@ -272,6 +288,7 @@ void ctm_bridge_stop(void)
     }
     log_append("ctm glue: bridge stopped");
     s_active = false;
+    s_core_up = false;
 }
 
 bool ctm_bridge_active(void)
