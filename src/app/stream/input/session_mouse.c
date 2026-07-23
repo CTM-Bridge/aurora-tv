@@ -10,6 +10,9 @@
 #include <SDL.h>
 
 void stream_input_handle_mbutton(stream_input_t *input, const SDL_MouseButtonEvent *event) {
+    if (input->view_only) {
+        return;
+    }
     if (pointer_gesture_handle_mbutton(input, event)) {
         return;
     }
@@ -50,7 +53,9 @@ void stream_input_handle_mbutton(stream_input_t *input, const SDL_MouseButtonEve
 }
 
 void stream_input_handle_mwheel(stream_input_t *input, const SDL_MouseWheelEvent *event) {
-    (void) input;
+    if (input->view_only) {
+        return;
+    }
     if (event->which == SDL_TOUCH_MOUSEID && LiGetHostFeatureFlags() & LI_FF_PEN_TOUCH_EVENTS) {
         // Don't send mouse events from touch devices if the host supports pen/touch events
         return;

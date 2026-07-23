@@ -16,6 +16,7 @@
 #include "app_session.h"
 #include "session_worker.h"
 #include "stream/input/session_virt_mouse.h"
+#include "ctm_bridge_glue.h"
 
 // Expected luminance values in SEI are in units of 0.0001 cd/m2
 #define LUMINANCE_SCALE 10000
@@ -111,6 +112,7 @@ void session_interrupt(session_t *session, bool quitapp, streaming_interrupt_rea
     session_input_interrupt(&session->input);
     session->quitapp = quitapp;
     session->interrupted = true;
+    session->interrupt_reason = reason;
 #if FEATURE_EMBEDDED_SHELL
     if (session->embed && session->embed_process) {
         embed_interrupt(session->embed_process);
@@ -147,11 +149,27 @@ bool session_start_input(session_t *session) {
     }
 #endif
     session_input_started(&session->input);
+    if (session->config.ctm_bridge) {
+        if (ctm_bridge_active()) {
+            // Stream came back after an auto-reconnect: the bridge was left
+            // running so the controllers stayed plugged through the outage.
+            // Re-plug anything a longer outage dropped (no-op when still plugged).
+            ctm_bridge_plug_all();
+        } else {
+            // Keep Moonlight's controllers open (UI nav still works); host sends are
+            // gated and the controller-arrival is suppressed, so nothing reaches the
+            // host. The bridge forwards the plugged controller to the game itself.
+            ctm_bridge_start();
+        }
+    }
     return true;
 }
 
 void session_stop_input(session_t *session) {
     session_input_stopped(&session->input);
+    if (session->config.ctm_bridge) {
+        ctm_bridge_stop();
+    }
 }
 
 bool session_has_input(session_t *session) {
@@ -269,7 +287,8 @@ void session_config_init(app_t *app, session_config_t *config, const SERVER_DATA
     config->vmouse = app_config->virtual_mouse;
     config->hardware_mouse = app_config->hardware_mouse;
     config->local_audio = app_config->localaudio;
-    config->view_only = app_config->viewonly;
+    config->view_only = app_config->viewonly || app_config->ctm_bridge;
+    config->ctm_bridge = app_config->ctm_bridge;
     config->sops = app_config->sops;
     if (app_config->stick_deadzone < 0) {
         config->stick_deadzone = 0;

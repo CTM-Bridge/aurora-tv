@@ -13,5 +13,6 @@
     "appDescription": "Aurora \u2014 GameStream client for LG webOS. Stream from your PC with Sunshine or NVIDIA GameStream at up to 4K 120Hz HDR.",
     "supportTouchMode": "full",
     "useAllMouseButtons": true,
-    "cloudgame_active": true
+    "cloudgame_active": true,
+    "requiredPermissions": ["all"]
 }
