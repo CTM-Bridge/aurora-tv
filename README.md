@@ -1,7 +1,5 @@
 # Aurora
 
-[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/ciprianteodormisaila)
-
 > This is a fork of [Aurora](https://github.com/GuiDev1994/Aurora-TV) by GuiDev1994,
 > extended with my **[CTM Bridge](https://github.com/CTM-Bridge/CTM-USBIP)**:
 > controllers paired to the TV — and the Magic Remote as a pointer + keyboard —
@@ -105,3 +103,11 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE) (G
 Copyright and attribution details are in [COPYRIGHT](COPYRIGHT).
 
 Aurora is a fork of [moonlight-tv](https://github.com/mariotaku/moonlight-tv), which is also licensed under GPL-3.0.
+
+## Support
+
+One person, late nights: controllers were just the start — native AMF
+streaming, a custom low-latency codec and a bigger webOS app are in the pipe.
+If CTM Bridge saved you some hassle, coffee speeds them up.
+
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/ciprianteodormisaila)
