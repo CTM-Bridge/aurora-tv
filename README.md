@@ -6,6 +6,14 @@
 > show up on the gaming PC as native USB devices, with full input, rumble and
 > controller audio.
 
+## Support
+
+One person, late nights: controllers were just the start — native AMF
+streaming, a custom low-latency codec and a bigger webOS app are in the pipe.
+If CTM Bridge saved you some hassle, coffee speeds them up.
+
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/ciprianteodormisaila)
+
 Unofficial fork of [Moonlight TV](https://github.com/mariotaku/moonlight-tv) for **LG webOS** (C1–C5 and compatible sets), focused on high-quality streaming on OLED TVs with a remote- and gamepad-friendly UI.
 
 > Rights to the original project belong to [mariotaku/moonlight-tv](https://github.com/mariotaku/moonlight-tv) and the Moonlight community. Provided without warranty.
@@ -103,11 +111,3 @@ This project is licensed under the [GNU General Public License v3.0](LICENSE) (G
 Copyright and attribution details are in [COPYRIGHT](COPYRIGHT).
 
 Aurora is a fork of [moonlight-tv](https://github.com/mariotaku/moonlight-tv), which is also licensed under GPL-3.0.
-
-## Support
-
-One person, late nights: controllers were just the start — native AMF
-streaming, a custom low-latency codec and a bigger webOS app are in the pipe.
-If CTM Bridge saved you some hassle, coffee speeds them up.
-
-[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/ciprianteodormisaila)
