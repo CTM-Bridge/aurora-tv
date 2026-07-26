@@ -2,9 +2,11 @@
 
 [![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/ciprianteodormisaila)
 
-> This is a fork of [Aurora](https://github.com/GuiDev1994/Aurora-TV) by GuiDev1994 —
-> with **CTM Bridge** support built in: controllers (and the TV's Magic Remote as a
-> pointer/keyboard) paired to the TV appear on the gaming PC as native USB devices.
+> This is a fork of [Aurora](https://github.com/GuiDev1994/Aurora-TV) by GuiDev1994,
+> extended with my **[CTM Bridge](https://github.com/CTM-Bridge/CTM-USBIP)**:
+> controllers paired to the TV — and the Magic Remote as a pointer + keyboard —
+> show up on the gaming PC as native USB devices, with full input, rumble and
+> controller audio.
 
 Unofficial fork of [Moonlight TV](https://github.com/mariotaku/moonlight-tv) for **LG webOS** (C1–C5 and compatible sets), focused on high-quality streaming on OLED TVs with a remote- and gamepad-friendly UI.
 
